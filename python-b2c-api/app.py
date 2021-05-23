@@ -7,15 +7,24 @@ from functools import wraps
 from flask import Flask, request, jsonify, _request_ctx_stack
 from flask_cors import cross_origin
 from jose import jwt
+from random import randint, randrange
 
+# Setup Flask Instance
 app = Flask(__name__)
 
-# Provide the B2C Tenant name, specify the non-MFA B2C Policy name, and the API client id
-TENANT_NAME = os.getenv('TENANT_NAME')
-TENANT_ID = os.getenv('TENANT_ID')
-B2C_POLICY = os.getenv('B2C_POLICY')
-CLIENT_ID = os.getenv('CLIENT_ID')
+# This section is needed for url_for("foo", _external=True) to automatically
+# generate http scheme when this sample is running on localhost,
+# and to generate https scheme when it is deployed behind reversed proxy.
+# See also https://flask.palletsprojects.com/en/1.0.x/deploying/wsgi-standalone/#proxy-setups
+from werkzeug.middleware.proxy_fix import ProxyFix
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
+# Provide the B2C Tenant name, specify the non-MFA B2C Policy name, and the API client id
+TENANT_NAME = os.getenv('B2C_DIR')
+TENANT_ID = os.getenv('TENANT_ID')
+B2C_POLICY = os.getenv('B2C_POLICY', default = 'B2C_1_signupsignin1')
+CLIENT_ID = os.getenv('CLIENT_ID')
+os.getenv('API_ENDPOINT', default = 'http://python-b2c-api')
 # Enable logging
 logging.basicConfig(
     level=logging.INFO,
@@ -159,9 +168,17 @@ def retrieve_policy_information():
         for account in accounts:
             if account['email'] == email:
                 return(account)
-    return "Record not found"
+        new_account = {
+            'beneficiary':'Homer Simpson',
+            'email': email,
+            'policynumber': randint(10000000,99999999)
+        }
+        accounts.append(new_account)       
+        update_accounts(accounts)
+        return(new_account)
 
-# Update the policy information in the accoutns file
+
+# Update the policy information in the accounts file
 def update_policy_information(new_beneficiary):
     token = get_token_auth_header()
     unverified_claims = jwt.get_unverified_claims(token)
@@ -214,8 +231,6 @@ def acctudpate():
         "code": "Unauthorized",
         "description": "You don't have access to this resource"
     }, 403)
-
-# This allows a user to set a color
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=5001)
