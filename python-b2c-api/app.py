@@ -24,7 +24,7 @@ TENANT_NAME = os.getenv('B2C_DIR')
 TENANT_ID = os.getenv('TENANT_ID')
 B2C_POLICY = os.getenv('B2C_POLICY', default = 'B2C_1_signupsignin1')
 CLIENT_ID = os.getenv('CLIENT_ID')
-os.getenv('API_ENDPOINT', default = 'http://python-b2c-api')
+
 # Enable logging
 logging.basicConfig(
     level=logging.INFO,
