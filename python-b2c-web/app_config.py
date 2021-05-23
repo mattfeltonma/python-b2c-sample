@@ -29,7 +29,7 @@ REDIRECT_PATH = "/getAToken"
 REDIRECT_PATH_MFA = "/getATokenMFA"
 
 # Set the address that the API is running under
-API_ENDPOINT = os.getenv('API_ENDPOINT', default = 'http://localhost:5001')
+API_ENDPOINT = os.getenv('API_ENDPOINT', default = 'http://python-b2c-api:5001')
 
 # Scopes the application need to use
 SCOPES = [f"https://{b2c_tenant}.onmicrosoft.com/api/Accounts.Read",f"https://{b2c_tenant}.onmicrosoft.com/api/Accounts.Write"]

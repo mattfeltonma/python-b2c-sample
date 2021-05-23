@@ -1,0 +1,4 @@
+Flask==1.1.2
+Flask-Cors==3.0.9
+python-jose==3.1.0
+werkzeug>=1,<2

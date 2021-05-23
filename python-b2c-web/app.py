@@ -31,7 +31,6 @@ class EditBeneficiaryForm(FlaskForm):
 class ChangeBeneficiaryButton(FlaskForm):
     change_beneficiary = SubmitField()
 
-
 # Retrieve an ID token and access token for the user and store the ID token claims in the server-side session
 # Place the access token and id token into cache
 def retrieve_id_token(code, scopes, redirect_uri, authority):
@@ -41,7 +40,7 @@ def retrieve_id_token(code, scopes, redirect_uri, authority):
         scopes=scopes,
         redirect_uri=redirect_uri)
     if "error" in result:
-        return render_template("auth_error.html", result=result)
+        return result
     if not session.get('user'):
         session["user"] = result.get("id_token_claims")
     _save_cache(cache)
@@ -72,6 +71,8 @@ def authorized():
             scopes = app_config.SCOPES,
             redirect_uri = url_for("authorized", _external=True)
         )
+        if result != None: 
+            return render_template("auth_error.html", result=result)
     return redirect(url_for("index"))
 
 # Authenticate the user and send the user through the MFA B2C Policy
@@ -121,8 +122,6 @@ def acctinfo():
         if form.validate():
             return redirect(url_for('change'))
         return render_template('account.html',user=session["user"],account=json.loads(api_data.text),form=form)
-    elif api_data.text == 'Record not found':
-        return render_template('noaccount.html', user=session["user"])
     else:
         return render_template("auth_error.html", result=api_data)
 

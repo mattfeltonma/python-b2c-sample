@@ -1,10 +1,3 @@
-Dockerfile
 env
-python-b2c-web-app/setup.ps1
-python-b2c-web-app/__pycache__/app_config.cpython-38.pyc
-python-b2c-web-app/__pycache__/app.cpython-38.pyc
-python-b2c-web-app/flask_session/2029240f6d1128be89ddc32729463129
-python-b2c-web-app/flask_session/dc6e95a86915dc5c63f5d6fd99ab6de5
-python-simple-web-api/__pycache__/app.cpython-38.pyc
-.gitignore
 .vscode
+.DS_Store
